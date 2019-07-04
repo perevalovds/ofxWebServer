@@ -53,11 +53,15 @@
 #include <process.h>
 #include <direct.h>
 #include <io.h>
+
+#define NO_CGI
 #else /* _WIN32_WCE */
 /* Windows CE-specific definitions */
 #include <winsock2.h>
 #define NO_CGI	/* WinCE has no pipes */
 #define NO_SSI	/* WinCE has no pipes */
+
+
 
 #define FILENAME_MAX	MAX_PATH
 #define BUFSIZ		4096
