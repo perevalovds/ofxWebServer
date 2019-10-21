@@ -1,11 +1,9 @@
-#ifndef _TEST_APP
-#define _TEST_APP
-
+#pragma once
 
 #include "ofMain.h"
 #include "ofxWebServer.h"
 
-class testApp : public ofBaseApp, public ofxWSRequestHandler {
+class ofApp : public ofBaseApp, public ofxWSRequestHandler {
 
 public:
 	void setup();
@@ -24,6 +22,8 @@ public:
 	
 	ofColor color;
 	
+	int port;
+
 };
 
-#endif
+

@@ -1,7 +1,9 @@
-ofxWebServer
-============
-My (perevalovds) modification of ofxWebServer, adopted to compiling on Windows/of0074.
+# ofxWebServer
 
+My (perevalovds) modification of ofxWebServer, adopted to compiling on Windows, oF 0.10.1.
 
-Run a webserver within openFrameworks. You can serve files from your data folder or write c++ code that gets triggered by URL requests.
+## Features
+Webserver implementation using mongoose.
+
+You can serve files from your data folder or write c++ code that gets triggered by URL requests.
 

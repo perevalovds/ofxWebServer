@@ -1,8 +1,11 @@
-#include "testApp.h"
+#include "ofApp.h"
 
 //--------------------------------------------------------------
-void testApp::setup(){
-	server.start("httpdocs");
+void ofApp::setup(){
+	ofSetWindowTitle("Server");
+	ofSetWindowShape(300, 200);
+	port = 8910;
+	server.start("httpdocs", port);
 	server.addHandler(this, "actions/*");
 	color.r = 255;
 	color.g = 255;
@@ -10,7 +13,7 @@ void testApp::setup(){
 }
 
 
-void testApp::httpGet(string url) {
+void ofApp::httpGet(string url) {
 	string colorString = getRequestParameter("color");
 	if(colorString=="red") {
 		color.r = 255;
@@ -31,48 +34,52 @@ void testApp::httpGet(string url) {
 					+ " " + ofToString(color.b));
 }
 //--------------------------------------------------------------
-void testApp::update(){
+void ofApp::update(){
 
 }
 
 //--------------------------------------------------------------
-void testApp::draw(){
+void ofApp::draw(){
 	ofSetColor(color.r, color.g, color.b);
+	ofFill();
 	ofRect(0,0,ofGetWidth(), ofGetHeight());
-}
 
-//--------------------------------------------------------------
-void testApp::keyPressed(int key){
+	ofDrawBitmapStringHighlight("open in browser localhost:" + ofToString(port), 20, 20);
 
 }
 
 //--------------------------------------------------------------
-void testApp::keyReleased(int key){
+void ofApp::keyPressed(int key){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mouseMoved(int x, int y ){
+void ofApp::keyReleased(int key){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mouseDragged(int x, int y, int button){
+void ofApp::mouseMoved(int x, int y ){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mousePressed(int x, int y, int button){
+void ofApp::mouseDragged(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mouseReleased(int x, int y, int button){
+void ofApp::mousePressed(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void testApp::windowResized(int w, int h){
+void ofApp::mouseReleased(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::windowResized(int w, int h){
 
 }
 

@@ -132,10 +132,10 @@ typedef HANDLE pthread_cond_t;
 typedef DWORD pthread_t;
 //typedef HANDLE pid_t;
 
-struct timespec {
-	long tv_nsec;
-	long tv_sec;
-};
+//struct timespec {
+//	long tv_nsec;
+//	long tv_sec;
+//};
 
 static int pthread_mutex_lock(pthread_mutex_t *);
 static int pthread_mutex_unlock(pthread_mutex_t *);
@@ -710,7 +710,7 @@ next_option(const char *list, struct vec *val, struct vec *eq_val)
 			 * so that val points to "x", and eq_val points to "y".
 			 */
 			eq_val->len = 0;
-			eq_val->ptr = memchr(val->ptr, '=', val->len);
+			eq_val->ptr = (const char*)memchr(val->ptr, '=', val->len);
 			if (eq_val->ptr != NULL) {
 				eq_val->ptr++;  /* Skip over '=' character */
 				eq_val->len = val->ptr + val->len - eq_val->ptr;
