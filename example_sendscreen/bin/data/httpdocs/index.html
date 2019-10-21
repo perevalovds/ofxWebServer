@@ -4,7 +4,7 @@
 		<script language="javascript">
 			function loadImage() {
 				//AJAX implementation with jQuery
-				$.get("/actions/?image=" + new Date().getTime(), function(data) { 
+				$.get("/actions/image?time=" + new Date().getTime(), function(data) { 
 				    document.getElementById("imageHolder").src = "data:image/png;base64," + data; 
 				});
 
@@ -12,40 +12,32 @@
 				var refresh_ms = 300;
 				setTimeout(loadImage,refresh_ms);
 
-				/*
-				//AJAX implementation without jQuery:
-				var xhttp;
-				if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
-					xhttp = new XMLHttpRequest();
-				} else { // code for IE6, IE5
-					xhttp = new ActiveXObject("Microsoft.XMLHTTP");
-				}
-				
-				xhttp.onreadystatechange = function() {
-					if (this.readyState == 4 && this.status == 200) {
-						//document.getElementById("demo").innerHTML = this.responseText;
-						document.getElementById("imageHolder").src = "data:image/png;base64," + this.responseText;
-					}
-				};
-				
-				//adding time label to request to prevent undesirable image caching by browser
-				xhttp.open("GET", "/actions/?image=" + new Date().getTime(), true);
-				xhttp.send();*/
 				
 			}
-</script>
+		function showCoords(event) {
+			var img =  document.getElementById("imageHolder");
+			var w = img.clientWidth;
+			var h = img.clientHeight;
+		
+            var x = event.offsetX / w; //event.clientX;
+            var y = event.offsetY / h; //event.clientY;
+            var coords = "X: " + x + ", Y: " + y;
+            document.getElementById("mouseHolder").innerHTML = coords;
+			
+			$.get('/actions/mouse?x='+x+'&y='+y, function(data) {});
+        }	
+        </script>
 
 	</head>
 	
-	<body>
-	<p>Press the button to start loading oF screen.</p>
+	<body onload="loadImage()">
+	<p>Here is oF screen</p>
 	
-	<img id="imageHolder" src="" alt="Image" />
+	<img id="imageHolder" src="" alt="Image" onclick="showCoords(event)" width="40%" />
 	
 	<br>
 	
-	<button type="button" onclick="loadImage()">Load image</button>
-
+	<p id="mouseHolder">Click to image to change circle position</p>
 	
 	
 	</body>

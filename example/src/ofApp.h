@@ -1,6 +1,10 @@
 #pragma once
 
 #include "ofMain.h"
+
+//This example which creates webpage with controls for changing oF application's background color.
+
+
 #include "ofxWebServer.h"
 
 class ofApp : public ofBaseApp, public ofxWSRequestHandler {

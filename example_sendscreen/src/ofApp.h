@@ -3,8 +3,8 @@
 #include "ofMain.h"
 #include "ofxWebServer.h"
 
-//This example demonstrates sending oF screen to webpage.
-//It uses ofxKu addon for base64 encoding (only ofxKuUtilsBase64.h,.cpp files are required)
+//This example demonstrates sending oF screen to webpage and also sending mouse clicks from web.
+//It uses ofxKu addon for base64 encoding (only ofxKuUtilsBase64.h,.cpp files are required).
 
 class ofApp : public ofBaseApp, public ofxWSRequestHandler {
 
@@ -28,6 +28,8 @@ public:
 
 	ofMutex mutex;
 
+	//mouse coords received from web, used for drawing circle
+	float x_, y_;
 
 };
 

@@ -9,6 +9,8 @@ You can serve files from your data folder or write c++ code that gets triggered 
 
 ## Examples
 
-* example - a simple example which controls oF application background color
+* example - an example which creates webpage with controls for changing oF application's background color.
 
-* example_sendscreen - an example which grab oF screen and sends it as a JPEG image to a webpage.
+* example_sendscreen - this example demonstrates sending oF screen to webpage 
+and also sending mouse clicks from web.
+It uses ofxKu addon for base64 encoding (only ofxKuUtilsBase64.h,.cpp files are required).

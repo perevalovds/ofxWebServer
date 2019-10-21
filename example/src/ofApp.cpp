@@ -1,5 +1,7 @@
 #include "ofApp.h"
 
+//This example which creates webpage with controls for changing oF application's background color.
+
 //--------------------------------------------------------------
 void ofApp::setup(){
 	ofSetWindowTitle("Server");
@@ -12,8 +14,11 @@ void ofApp::setup(){
 	color.b = 255;
 }
 
-
+//--------------------------------------------------------------
 void ofApp::httpGet(string url) {
+	//Note: this is asynchronous callback, so, for "big" operations, please use mutex (ofMutex).
+	//See example_sendscreen for the details.
+	
 	string colorString = getRequestParameter("color");
 	if(colorString=="red") {
 		color.r = 255;
