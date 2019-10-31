@@ -33,6 +33,9 @@ void ofApp::httpGet(string url) {
 		color.g = 0;
 		color.b = 255;
 	}
+
+	//Sending response
+	//Note: you must send httpResponse, else browser send request many times!
 	httpResponse("Color value: " 
 					+ ofToString(color.r) 
 					+ " " + ofToString(color.g) 

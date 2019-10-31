@@ -32,6 +32,7 @@ void ofApp::httpGet(string url) {
 		//Get mouse coord from web and use it for the circle position
 		x_ = ofToFloat(getRequestParameter("x"));
 		y_ = ofToFloat(getRequestParameter("y"));
+		//we will send response in the end of the function
 	}
 	
 	if (url == "/actions/image") {
@@ -54,12 +55,18 @@ void ofApp::httpGet(string url) {
 
 		string base64 = ofxKuUtilsBase64::encode((unsigned char*)buffer.getBinaryBuffer(), buffer.size());
 
-		//Send response
+		//Sending response
 		httpResponse("Content-Type: image/jpeg", base64);
 
 		mutex.unlock();
+		return;
 	}
+	
+	//Sending response
+	//Note: you must send httpResponse, else browser send request many times!
+	httpResponse("");
 }
+
 //--------------------------------------------------------------
 void ofApp::update(){
 
