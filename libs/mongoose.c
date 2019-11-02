@@ -204,7 +204,8 @@ typedef int SOCKET;
 #define	PASSWORDS_FILE_NAME	".htpasswd"
 #define	CGI_ENVIRONMENT_SIZE	4096
 #define	MAX_CGI_ENVIR_VARS	64
-#define	MAX_REQUEST_SIZE	81920
+#define	MAX_REQUEST_SIZE	1000000
+//(perevalovds increases this)  81920
 #define	MAX_LISTENING_SOCKETS	10
 #define	MAX_CALLBACKS		20
 #define	ARRAY_SIZE(array)	(sizeof(array) / sizeof(array[0]))
@@ -1539,15 +1540,20 @@ mg_write(struct mg_connection *conn, const void *buf, int len)
 int
 mg_printf(struct mg_connection *conn, const char *fmt, ...)
 {
-	char	buf[MAX_REQUEST_SIZE];
+	//char	buf[MAX_REQUEST_SIZE];
+	char *buf = (char*)malloc(MAX_REQUEST_SIZE); //[MAX_REQUEST_SIZE];		//perevalovds
+	int sizeof_buf = MAX_REQUEST_SIZE;
+
 	int	len;
 	va_list	ap;
 
 	va_start(ap, fmt);
-	len = mg_vsnprintf(conn, buf, sizeof(buf), fmt, ap);
+	len = mg_vsnprintf(conn, buf, sizeof_buf, fmt, ap);	//perevalovds
 	va_end(ap);
 
-	return (mg_write(conn, buf, len));
+	int result = mg_write(conn, buf, len);
+	free(buf);		//perevalovds
+	return result;
 }
 
 /*
@@ -2375,11 +2381,14 @@ static bool_t
 authorize(struct mg_connection *conn, FILE *fp)
 {
 	struct ah	ah;
-	char		line[256], f_user[256], domain[256], ha1[256],
-			buf[MAX_REQUEST_SIZE];
+	char		line[256], f_user[256], domain[256], ha1[256];
+	char *buf = (char*)malloc(MAX_REQUEST_SIZE); //[MAX_REQUEST_SIZE];		//perevalovds
+	int sizeof_buf = MAX_REQUEST_SIZE;
 
-	if (!parse_auth_header(conn, buf, sizeof(buf), &ah))
+	if (!parse_auth_header(conn, buf, sizeof_buf, &ah)) {		//perevalovds
+		free(buf);
 		return (FALSE);
+	}
 
 	/* Loop over passwords file */
 	while (fgets(line, sizeof(line), fp) != NULL) {
@@ -2388,13 +2397,17 @@ authorize(struct mg_connection *conn, FILE *fp)
 			continue;
 
 		if (!strcmp(ah.user, f_user) &&
-		    !strcmp(domain, conn->ctx->options[OPT_AUTH_DOMAIN]))
-			return (check_password(
-			    conn->request_info.request_method, ha1,
-			    ah.uri, ah.nonce, ah.nc, ah.cnonce,
-			    ah.qop, ah.response));
+			!strcmp(domain, conn->ctx->options[OPT_AUTH_DOMAIN])) {
+			bool_t result = check_password(
+				conn->request_info.request_method, ha1,
+				ah.uri, ah.nonce, ah.nc, ah.cnonce,
+				ah.qop, ah.response);
+			free(buf);	//perevalovds
+			return result;
+		}
 	}
 
+	free(buf);		//perevalovds
 	return (FALSE);
 }
 
@@ -3261,7 +3274,7 @@ send_cgi(struct mg_connection *conn, const char *prog)
 {
 	int			headers_len, data_len, i, n;
 	const char		*status;
-	char			buf[MAX_REQUEST_SIZE], *pbuf;
+	char			buf[MAX_REQUEST_SIZE], *pbuf;   TODO make buf malloc, as in other places (perevalovds)
 	struct mg_request_info	ri;
 	struct cgi_env_block	blk;
 	char			dir[FILENAME_MAX], *p;
@@ -4405,21 +4418,24 @@ static void
 process_new_connection(struct mg_connection *conn)
 {
 	struct mg_request_info *ri = &conn->request_info;
-	char	buf[MAX_REQUEST_SIZE];
+	char	*buf = (char*)malloc(MAX_REQUEST_SIZE); //[MAX_REQUEST_SIZE];		//perevalovds
+	int sizeof_buf = MAX_REQUEST_SIZE;
+
 	int	request_len, nread;
 
 	nread = 0;
 	reset_connection_attributes(conn);
 
 	/* If next request is not pipelined, read it in */
-	if ((request_len = get_request_len(buf, (size_t) nread)) == 0)
+	if ((request_len = get_request_len(buf, (size_t)nread)) == 0)
 		request_len = read_request(NULL, conn->client.sock,
-		    conn->ssl, buf, sizeof(buf), &nread);
+			conn->ssl, buf, sizeof_buf, &nread); 	//perevalovds
 	assert(nread >= request_len);
 
-	if (request_len <= 0)
+	if (request_len <= 0) {
+		free(buf);	//perevalovds
 		return;	/* Remote end closed the connection */
-
+	}
 	/* 0-terminate the request: parse_request uses sscanf */
 	buf[request_len - 1] = '\0';
 
@@ -4446,6 +4462,7 @@ process_new_connection(struct mg_connection *conn)
 		    "Can not parse request: [%.*s]", nread, buf);
 	}
 
+	free(buf);	//perevalovds
 }
 
 /*

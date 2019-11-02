@@ -56,7 +56,7 @@ void ofApp::httpGet(string url) {
 		string base64 = ofxKuUtilsBase64::encode((unsigned char*)buffer.getBinaryBuffer(), buffer.size());
 
 		//Sending response
-		httpResponse("Content-Type: image/jpeg", base64);
+		httpResponse("image/jpeg", base64);
 
 		mutex.unlock();
 		return;
