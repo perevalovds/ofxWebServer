@@ -1,11 +1,21 @@
 <html>
 	<head>
-		<script language="javascript" src="jquery-1.4.2.js"></script>
+		<script language="javascript" src="jquery-1.6.min.js"></script>
 		<script language="javascript">
 			function loadImage() {
 				//AJAX implementation with jQuery
+				//https://api.jquery.com/jquery.get/
 				$.get("/actions/image?time=" + new Date().getTime(), function(data) { 
 				    document.getElementById("imageHolder").src = "data:image/png;base64," + data; 
+				})
+				.done(function() {
+					//alert( "second success" );
+				})
+				.fail(function() {
+					//alert( "error" );
+				})
+				.always(function() {
+					//alert( "finished" );
 				});
 
 				//auto-refresh
